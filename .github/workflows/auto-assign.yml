@@ -7,7 +7,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: 'Auto-assign PR'
-              uses: pozil/auto-assign-issue@v1
+              uses: pozil/auto-assign-issue@v1.2.4
               with:
                   abortIfPreviousAssignees: true
                   repo-token: ${{ secrets.MY_PERSONAL_ACCESS_TOKEN }}
