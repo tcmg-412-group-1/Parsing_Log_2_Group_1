@@ -35,39 +35,49 @@ class LogLine:
         log_matches = re.finditer(APACHE_LOG_REGEX, log_contents, re.MULTILINE)
         return [LogLine(log_match) for log_match in log_matches]
 
-file_contents = ""
+def main():
+    file_contents = ""
 
-try:
-    # Counterintuitively, brazenly trying to open the file and handling any
-    # resultant errors is better than checking if the file exists. Checking for
-    # existence before opening the file could lead to a time-of-check to
-    # time-of-use bug.
-    with open(CACHED_LOG_FILENAME, "r") as log:
-        file_contents = log.read()
-except FileNotFoundError:
-    with open(CACHED_LOG_FILENAME, "w") as log:
-        r = urlopen(URL)
-        # When reading a file, Python automatically decodes the data from
-        # UTF-8 and normalizes all Windows-style newlines to Unix-style
-        # newlines. Here, we have to do it ourselves.
-        file_contents = r.read().decode().replace("\r\n", "\n")
-        log.write(file_contents)
+    try:
+        # Counterintuitively, brazenly trying to open the file and handling any
+        # resultant errors is better than checking if the file exists. Checking
+        # for existence before opening the file could lead to a time-of-check
+        # to time-of-use bug.
+        with open(CACHED_LOG_FILENAME, "r") as log:
+            file_contents = log.read()
+    except FileNotFoundError:
+        with open(CACHED_LOG_FILENAME, "w") as log:
+            r = urlopen(URL)
+            # When reading a file, Python automatically decodes the data from
+            # UTF-8 and normalizes all Windows-style newlines to Unix-style
+            # newlines. Here, we have to do it ourselves.
+            file_contents = r.read().decode().replace("\r\n", "\n")
+            log.write(file_contents)
 
-log_lines = LogLine.read_many_from(file_contents)
-# This will allow us to binary search for the first date from six months ago
-log_lines.sort(key=lambda line: line.date)
-last_date = log_lines[-1].date
-# This isn't exactly 6 months, but it's probably close enough
-six_months_before_last = last_date.replace(month=last_date.month - 6)
-# Find where `six_months_before_last` would be if it was in the list.
-# If it's already in the list, this finds its first occurence.
-# This is equivalent to searching for the earliest date in the last six months.
-six_months_index = bisect_left(log_lines, six_months_before_last, key=lambda line: line.date)
-last_six_months = log_lines[six_months_index:]
+    log_lines = LogLine.read_many_from(file_contents)
+    # This will allow us to search for the first date from six months ago
+    log_lines.sort(key=lambda line: line.date)
+    last_date = log_lines[-1].date
+    # This isn't exactly 6 months, but it's probably close enough
+    six_months_before_last = last_date.replace(month=last_date.month - 6)
 
-first_date_str = log_lines[0].date.strftime(OUTPUT_DATE_FORMAT)
-last_six_months_str = six_months_before_last.strftime(OUTPUT_DATE_FORMAT)
-last_date_str = last_date.strftime(OUTPUT_DATE_FORMAT)
+    # Find where `six_months_before_last` would be if it was in the list.
+    # If it's already in the list, this finds its first occurence.
+    # This is equivalent to searching for the earliest date in the last six
+    # months.
+    six_months_index = bisect_left(
+        log_lines,
+        six_months_before_last,
+        key=lambda line: line.date,
+    )
+    last_six_months = log_lines[six_months_index:]
 
-print(f"Between {first_date_str} and {last_date_str}, there were {len(log_lines)} requests made to our website")
-print(f"In the last six months ({last_six_months_str} - {last_date_str}), there were {len(last_six_months)} requests made to our website")
+    first_date_str = log_lines[0].date.strftime(OUTPUT_DATE_FORMAT)
+    last_six_months_str = six_months_before_last.strftime(OUTPUT_DATE_FORMAT)
+    last_date_str = last_date.strftime(OUTPUT_DATE_FORMAT)
+
+    print(f"Between {first_date_str} and {last_date_str}, there were {len(log_lines)} requests made to our website")
+    print(f"In the last six months ({last_six_months_str} - {last_date_str}), there were {len(last_six_months)} requests made to our website")
+
+if __name__ == "__main__":
+    main()
