@@ -3,7 +3,7 @@
 from bisect import bisect_left
 from datetime import datetime
 import re
-import requests
+from urllib.request import urlopen
 
 URL = "https://s3.amazonaws.com/tcmg476/http_access_log"
 CACHED_LOG_FILENAME = "parsing_log_1"
@@ -29,11 +29,11 @@ try:
         file_contents = log.read()
 except FileNotFoundError:
     with open(CACHED_LOG_FILENAME, "w") as log:
-        r = requests.get(URL, stream=True)
+        r = urlopen(URL)
         # When reading a file, Python automatically decodes the data from
         # UTF-8 and normalizes all Windows-style newlines to Unix-style
         # newlines. Here, we have to do it ourselves.
-        file_contents = r.content.decode().replace("\r\n", "\n")
+        file_contents = r.read().decode().replace("\r\n", "\n")
         log.write(file_contents)
 
 # Extract the dates from every valid log entry
