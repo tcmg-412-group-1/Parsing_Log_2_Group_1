@@ -7,4 +7,4 @@ This utility performs basic analyses on server access logs.
 3. Navigate to the folder where you extracted this utility in a command prompt or terminal.
 4. Run `python -m pip install -r requirements.txt` to install any necessary dependencies.
 
-You should now be able to use `python parsing_1.py` to run the utility.
+You should now be able to use `python parsing_2.py` to run the utility.
