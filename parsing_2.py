@@ -75,9 +75,21 @@ def main():
     first_date_str = log_lines[0].date.strftime(OUTPUT_DATE_FORMAT)
     last_six_months_str = six_months_before_last.strftime(OUTPUT_DATE_FORMAT)
     last_date_str = last_date.strftime(OUTPUT_DATE_FORMAT)
+    Redirect_count = 0
+    Error_count = 0
+
+    for line in log_lines:
+        if line.status_code[0] == "3":
+            Redirect_count += 1
+        elif line.status_code[0] == "4":
+            Error_count += 1
 
     print(f"Between {first_date_str} and {last_date_str}, there were {len(log_lines)} requests made to our website")
     print(f"In the last six months ({last_six_months_str} - {last_date_str}), there were {len(last_six_months)} requests made to our website")
+    print("Total number of redirects:", Redirect_count)
+    print("Percentage of redirect request:",(Redirect_count/total_responses))
+    print("Total number of Errors:", Error_count)
+    print("Percentage of error request:",(Error_count/total_responses))
 
 if __name__ == "__main__":
     main()
