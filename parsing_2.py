@@ -85,6 +85,25 @@ def main():
             Redirect_count += 1
         elif line.status_code[0] == "4":
             Error_count += 1
+
+
+    #Iterating to find requests
+    requests = {}
+
+    for line in log_lines:
+        if line.request in requests:
+            requests[line.request] +=1
+        else:
+            requests[line.request] = 1
+
+    max_requests = 0
+    max_requests_name = 'start'
+    for request in requests:
+        if requests[request] > max_requests:
+            max_requests = requests[request]
+            max_requests_name = request
+
+
    
     print(f"Between {first_date_str} and {last_date_str}, there were {len(log_lines)} requests made to our website")
     print(f"In the last six months ({last_six_months_str} - {last_date_str}), there were {len(last_six_months)} requests made to our website")
@@ -92,6 +111,7 @@ def main():
     print("Percentage of redirect request: {0:.1%}".format(Redirect_count/total_responses))
     print("Total number of Errors:", Error_count)
     print("Percentage of error request: {0:.1%}".format(Error_count/total_responses))
+    print("The most requested file: {max_requests_name}")
 
 if __name__ == "__main__":
     main()
