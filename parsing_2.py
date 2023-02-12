@@ -109,7 +109,7 @@ def main():
             max_requests_name = request
 
 
-   
+    total_responses = len(log_lines)
     print(f"Between {first_date_str} and {last_date_str}, there were {len(log_lines)} requests made to our website")
     print(f"In the last six months ({last_six_months_str} - {last_date_str}), there were {len(last_six_months)} requests made to our website")
     print("Total number of redirects:", Redirect_count)
