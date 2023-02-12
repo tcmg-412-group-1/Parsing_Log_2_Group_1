@@ -116,7 +116,7 @@ def main():
     print("Percentage of redirect request: {0:.1%}".format(Redirect_count/total_responses))
     print("Total number of Errors:", Error_count)
     print("Percentage of error request: {0:.1%}".format(Error_count/total_responses))
-    print("The most requested file: {max_requests_name}")
+    print(f"The most requested file: {max_requests_name}")
 
 if __name__ == "__main__":
     main()
