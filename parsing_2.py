@@ -87,15 +87,20 @@ def main():
             Error_count += 1
 
 
-    #Iterating to find requests
+    #Dictionary to store requests and how often they appear
     requests = {}
 
+    #basically copied from the example in general
+    #iterates through every request, if it exists it adds one, if not the request is added
+    #to the dictionary
     for line in log_lines:
         if line.request in requests:
             requests[line.request] +=1
         else:
             requests[line.request] = 1
 
+    #goes through the dictionary. If the number of requests is higher than max_requests,
+    #that number is stored in max_requests and the name in max_requests_name
     max_requests = 0
     max_requests_name = 'start'
     for request in requests:
