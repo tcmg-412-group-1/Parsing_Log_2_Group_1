@@ -65,6 +65,69 @@ def main():
             log.write(file_contents)
 
     log_lines = LogLine.read_many_from(file_contents)
+    
+    # These are dictionaries, which map keys to values.
+    requests_per_day = {}
+    requests_per_week = {}
+    requests_per_month = {}
+
+    # Each valid log line is already parsed into a list of `LogLine`s
+    # called `log_lines`.
+    for line in log_lines:
+    # Don't need to extract the date since it's already available through
+    # `line`. Still, there's something worth noting. The original code is
+    # written like this:
+    # if(len(line)>=56):
+    # However, parentheses are not necessary around `if` conditions in Python,
+    # so this style is preferred:
+    # if len(line) >= 56:
+
+    # We don't need to keep track of the current day, but there's another
+    # stylistic concern worth noting: `not (x == y)` is equivalent to `x != y`.
+    # Instead of
+    # if not (date_day == date[0]):
+    # one should write
+    # if line.date.day != date_day:
+    # (Note that the condition flipped — generally, the constant portion of a
+    # comparison should be on the right. Putting it on the left is called a Yoda
+    # condition, and has been found to make code harder to read)
+
+    # To count the requests made on each day, we can simply use the current date
+    # as an index into the `requests_per_day` map. However, we must make sure to
+    # avoid using the time. To do this, we can extract the date only (maybe
+    # `LogLine.date` could stand to have a better name)
+        day = line.date.date()
+
+    # If `requests_per_day` already has a counter for `day`, it must be
+    # incremented; otherwise, we need to initialize one. This could be
+    # simplified by making `requests_per_day` a `defaultdict` — doing so is left
+    # as an exercise for the reader.
+        if day in requests_per_day:
+            requests_per_day[day] += 1
+        else:
+            requests_per_day[day] = 1
+
+    # We can find the week of a date using `date.isocalendar()`. This returns a
+    # year, a week number, and a weekday. For more information, see the
+    # documentation:
+    # https://docs.python.org/3/library/datetime.htmldatetime.date.isocalendar
+            iso_date = day.isocalendar()
+    # Discard the weekday so we have an identifier for the week.
+            week = (iso_date.year, iso_date.week)
+
+        if week in requests_per_week:
+            requests_per_week[week] += 1
+        else:
+            requests_per_week[week] = 1
+
+    # All that remains is the month.
+        month = (day.year, day.month)
+
+        if month in requests_per_month:
+            requests_per_month[month] += 1
+        else:
+            requests_per_month[month] = 1
+    
     # This will allow us to search for the first date from six months ago
     log_lines.sort(key=lambda line: line.date)
     last_date = log_lines[-1].date
