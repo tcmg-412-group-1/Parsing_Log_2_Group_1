@@ -119,7 +119,7 @@ def main():
             max_requests_name = request
 
     #Question 6: same as above, but looking for lower than min_requests
-    min_requests = 2000
+    min_requests = float("inf")
     min_requests_name = 'start'
     for request in requests_dict:
         if requests_dict[request] < min_requests:
