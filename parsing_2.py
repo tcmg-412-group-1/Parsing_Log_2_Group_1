@@ -35,6 +35,16 @@ class LogLine:
         log_matches = re.finditer(APACHE_LOG_REGEX, log_contents, re.MULTILINE)
         return [LogLine(log_match) for log_match in log_matches]
 
+    def __str__(self):
+        # `self.identity` is optional; if it exists, there must be a space before it
+        identity = ""
+        if self.identity:
+            identity = " " + self.identity
+
+        # Need to write the date in the Apache format instead of this program's usual format
+        date = self.date.strftime(APACHE_LOG_DATE_FORMAT)
+        return f"{self.hostname}{identity} {self.user_id} [{date}] \"{self.request}\" {self.status_code} {self.response_size}"
+
 def main():
     file_contents = ""
 
