@@ -125,6 +125,46 @@ def main():
         if requests_dict[request] < min_requests:
             min_requests = requests_dict[request]
             min_requests_name = request
+                   
+    #Dividing into 12 log file
+    janlogs=open("january.txt", "a+"); 
+    feblogs=open("february.txt", "a+"); 
+    marlogs=open("march.txt", "a+"); 
+    aprlogs=open("april.txt", "a+"); 
+    maylogs=open("may.txt", "a+"); 
+    junlogs=open("june.txt", "a+"); 
+    jullogs=open("july.txt", "a+"); 
+    auglogs=open("august.txt", "a+"); 
+    seplogs=open("september.txt", "a+")
+    octlogs=open("october.txt", "a+"); 
+    novlogs=open("november.txt", "a+"); 
+    declogs=open("december.txt", "a+")   
+
+    for line in log_lines:
+        if (line.date.month == 1):
+            janlogs.write(str(line) + '\n')
+        elif (line.date.month == 2):
+            feblogs.write(str(line) + '\n')
+        elif (line.date.month == 3):
+            marlogs.write(str(line) + '\n')
+        elif (line.date.month == 4):
+            aprlogs.write(str(line) + '\n')
+        elif (line.date.month == 5):
+            maylogs.write(str(line) + '\n')
+        elif (line.date.month == 6):
+            junlogs.write(str(line) + '\n')
+        elif (line.date.month == 7):
+            jullogs.write(str(line) + '\n')
+        elif (line.date.month == 8):
+            auglogs.write(str(line) + '\n')
+        elif (line.date.month == 9):
+            seplogs.write(str(line) + '\n')
+        elif (line.date.month == 10):
+            octlogs.write(str(line) + '\n')
+        elif (line.date.month == 11):
+            novlogs.write(str(line) + '\n')
+        elif (line.date.month == 12):
+            declogs.write(str(line) + '\n')
 
 
     total_responses = len(log_lines)
