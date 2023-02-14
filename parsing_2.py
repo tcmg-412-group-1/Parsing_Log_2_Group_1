@@ -108,6 +108,13 @@ def main():
             max_requests = requests_dict[request]
             max_requests_name = request
 
+    min_requests = 2000
+    min_requests_name = 'start'
+    for request in requests_dict:
+        if requests_dict[request] < min_requests:
+            min_requests = requests_dict[request]
+            min_requests_name = request
+
 
     total_responses = len(log_lines)
     print(f"Between {first_date_str} and {last_date_str}, there were {len(log_lines)} requests made to our website")
@@ -117,6 +124,7 @@ def main():
     print("Total number of Errors:", Error_count)
     print("Percentage of error request: {0:.1%}".format(Error_count/total_responses))
     print(f"The most requested file: {max_requests_name}")
+    print(f"The least requested file: {min_requests_name}")
 
 if __name__ == "__main__":
     main()
